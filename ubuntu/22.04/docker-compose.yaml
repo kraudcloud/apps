@@ -1,0 +1,27 @@
+version: '3.9'
+name: ubuntu-22.04
+
+x-kraud-ui:
+  label: "Ubuntu 22.04.2 LTS (Jammy Jellyfish)"
+  description: |
+    Ubuntu is the modern, open source operating system on Linux for the enterprise server, desktop, cloud, and IoT.
+
+  logo_url: "https://upload.wikimedia.org/wikipedia/commons/5/54/Ubuntu-Logo_ohne_Schriftzug.svg"
+  ext_url: "https://ubuntu.com"
+
+volumes:
+  root:
+    driver: rbd
+    driver_opts:
+      size: 100G
+
+services:
+  ubuntu:
+    restart: always
+    image: quay.io/kraudcloud/pvm/ubuntu:22.04
+    build: .
+    volumes:
+      - root:/
+    labels:
+      - kr.res.mem=16G
+
