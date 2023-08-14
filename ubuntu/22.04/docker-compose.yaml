@@ -9,11 +9,81 @@ x-kraud-ui:
   logo_url: "https://upload.wikimedia.org/wikipedia/commons/5/54/Ubuntu-Logo_ohne_Schriftzug.svg"
   ext_url: "https://ubuntu.com"
 
+  config:
+    MEM:
+      label: "mem/cpu"
+      description: "size of compute slice"
+      kind: select
+      options:
+        - label: "1GB"
+          value: "1G"
+          description: "1 GB memory, 1Ghz CPU"
+        - label: "2 GB"
+          value: "2G"
+          description: "2 GB memory, 2Ghz CPU"
+        - label: "4 GB"
+          value: "4G"
+          description: "4 GB memory, 4Ghz CPU"
+        - label: "8 GB"
+          value: "8G"
+          description: "8 GB memory, 8Ghz CPU"
+        - label: "16 GB"
+          value: "16G"
+          description: "16 GB memory, 16Ghz CPU"
+        - label: "32 GB"
+          value: "32G"
+          description: "32 GB memory, 32Ghz CPU"
+        - label: "64 GB"
+          value: "64G"
+          description: "64 GB memory, 64Ghz CPU"
+        - label: "128 GB"
+          value: "128G"
+          description: "128 GB memory, 128Ghz CPU"
+        - label: "256 GB"
+          value: "256G"
+          description: "256 GB memory, 256Ghz CPU"
+        - label: "512 GB"
+          value: "512G"
+          description: "512 GB memory, 512Ghz CPU"
+        - label: "1 TB"
+          value: "1T"
+          description: "1 TB memory, 1Thz CPU"
+        - label: "2 TB"
+          value: "2T"
+          description: "2 TB memory, 2Thz CPU"
+    BOOT_SIZE:
+      label: "boot disk size"
+      description: "boot disk size"
+      kind: select
+      options:
+        - label: "5 GB"
+          value: "5G"
+          description: "5 GB of disk space"
+        - label: "10 GB"
+          value: "10G"
+          description: "10 GB of disk space"
+        - label: "20 GB"
+          value: "20G"
+          description: "20 GB of disk space"
+        - label: "40 GB"
+          value: "40G"
+          description: "40 GB of disk space"
+        - label: "100 GB"
+          value: "100G"
+          description: "100 GB of disk space"
+    ZONE:
+      kind: zone
+      label: "Deployment zone"
+      description: "Zone where the deployment and volumes will be created"
+      required: true
+
+
 volumes:
   root:
     driver: rbd
     driver_opts:
-      size: 100G
+      size: ${BOOT_SIZE}
+      zone: ${ZONE}
 
 services:
   ubuntu:
@@ -23,5 +93,6 @@ services:
     volumes:
       - root:/
     labels:
-      - kr.res.mem=16G
+      - kr.res.mem=${MEM}
+      - kr.zone=${ZONE}
 
