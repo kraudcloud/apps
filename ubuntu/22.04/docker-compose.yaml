@@ -11,50 +11,52 @@ x-kraud-ui:
 
   config:
     MEM:
-      label: "mem/cpu"
-      description: "size of compute slice"
+      label: "Memory and CPU"
+      description: "How much comput power would you like?"
       kind: select
+      default: 1G
       options:
-        - label: "1GB"
+        - label: "1 GB / 2 GHz"
           value: "1G"
           description: "1 GB memory, 1Ghz CPU"
-        - label: "2 GB"
+        - label: "2 GB / 2 GHz"
           value: "2G"
           description: "2 GB memory, 2Ghz CPU"
-        - label: "4 GB"
+        - label: "4 GB / 4 GHz"
           value: "4G"
           description: "4 GB memory, 4Ghz CPU"
-        - label: "8 GB"
+        - label: "8 GB / 8 Ghz"
           value: "8G"
           description: "8 GB memory, 8Ghz CPU"
-        - label: "16 GB"
+        - label: "16 GB / 16 Ghz"
           value: "16G"
           description: "16 GB memory, 16Ghz CPU"
-        - label: "32 GB"
+        - label: "32 GB / 32 GHz"
           value: "32G"
           description: "32 GB memory, 32Ghz CPU"
-        - label: "64 GB"
+        - label: "64 GB / 64 GHz"
           value: "64G"
           description: "64 GB memory, 64Ghz CPU"
-        - label: "128 GB"
+        - label: "128 GB / 128 GHz"
           value: "128G"
           description: "128 GB memory, 128Ghz CPU"
-        - label: "256 GB"
+        - label: "256 GB / 256 GHz"
           value: "256G"
           description: "256 GB memory, 256Ghz CPU"
-        - label: "512 GB"
+        - label: "512 GB / 512 GHz"
           value: "512G"
           description: "512 GB memory, 512Ghz CPU"
-        - label: "1 TB"
+        - label: "1 TB / 1 THz"
           value: "1T"
           description: "1 TB memory, 1Thz CPU"
-        - label: "2 TB"
+        - label: "2 TB / 2 Thz"
           value: "2T"
           description: "2 TB memory, 2Thz CPU"
     BOOT_SIZE:
-      label: "boot disk size"
-      description: "boot disk size"
+      label: "Boot Disk Size"
+      description: "Size of the initial boot volume. Boot volumes are block storage and can not be shared with other pods."
       kind: select
+      default: 20G
       options:
         - label: "5 GB"
           value: "5G"
@@ -73,6 +75,7 @@ x-kraud-ui:
           description: "100 GB of disk space"
     ZONE:
       kind: zone
+      default: uca
       label: "Deployment zone"
       description: "Zone where the deployment and volumes will be created"
       required: true
