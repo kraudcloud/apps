@@ -24,44 +24,83 @@ x-kraud-ui:
       protocol: "https"
       default: "nextcloud.*"
       required: true
+    DATA_SIZE:
+      label: "Storage"
+      description: "Size of the shared volume."
+      kind: select
+      default: 20G
+      options:
+        - label: "5 GB"
+          value: "5G"
+          description: "5 GB of disk space"
+        - label: "10 GB"
+          value: "10G"
+          description: "10 GB of disk space"
+        - label: "20 GB"
+          value: "20G"
+          description: "20 GB of disk space"
+        - label: "50 GB"
+          value: "50G"
+          description: "40 GB of disk space"
+        - label: "100 GB"
+          value: "100G"
+          description: "100 GB of disk space"
+        - label: "200 GB"
+          value: "200G"
+          description: "200 GB of disk space"
+        - label: "500 GB"
+          value: "500G"
+          description: "400 GB of disk space"
+        - label: "1 TB"
+          value: "1T"
+          description: "1TB of disk space"
+        - label: "2 TB"
+          value: "2T"
+          description: "2TB of disk space"
+    ZONE:
+      kind: zone
+      default: uca
+      label: "Deployment zone"
+      description: "Zone where the deployment and volumes will be created"
+      required: true
 
 
 volumes:
-  nextcloud_data:
-    name: nextcloud_data
-    driver: "local"
-  nextcloud_db:
-    name: nextcloud_db
-    driver: "local"
+  nextcloud:
+    driver_opts:
+      size: ${DATA_SIZE}
+      zone: ${ZONE}
 
 services:
   app:
     container_name: nextcloud
-    image: nextcloud:production-apache
-    restart: unless-stopped
+    image: nextcloud:25.0-apache
+    restart: always
     labels:
       - kr.ingress.http.80=${INGRESS:-https://nextcloud.*}
+      - kr.zone=${ZONE}
     depends_on:
       - db
     ports:
       - 80:80
     volumes:
-      - nextcloud_data:/var/www/html
+      - nextcloud/data:/var/www/html
     environment:
-      - MYSQL_PASSWORD=f70fd326b5b74126991190807f780eb1
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-      - MYSQL_HOST=db
+      - POSTGRES_HOST=db
+      - POSTGRES_PASSWORD=eeD2ohghthieL3eino5uXae3
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+      - OVERWRITEPROTOCOL=https
+      - TRUSTED_PROXIES=*
 
   db:
-    container_name: nextcloud_db
-    image: mariadb:10.5
+    container_name: db
+    image: postgres:15.3
     restart: always
-    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    labels:
+      - kr.zone=${ZONE}
     volumes:
-      - nextcloud_db:/var/lib/mysql
+      - nextcloud/db:/var/lib/postgresql/data
     environment:
-      - MYSQL_ROOT_PASSWORD=f70fd326b5b74126991190807f780eb1
-      - MYSQL_PASSWORD=f70fd326b5b74126991190807f780eb1
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
+      - POSTGRES_PASSWORD=eeD2ohghthieL3eino5uXae3
+
