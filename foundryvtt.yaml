@@ -1,0 +1,87 @@
+version: '3.9'
+name: foundryvtt
+
+x-kraud-ui:
+  label: "FoundryVTT"
+  description: |
+
+    Foundry Virtual Tabletop is software that provides an innovative online role-playing experience
+
+    Requires a license from https://foundryvtt.com/
+
+    As a "virtual tabletop", the software provides a set of digital tools which are designed to imitate and expand upon the experience of playing a game in-person with your friends. Support for character sheets, rolling dice, exploring battlemaps, and moving heroic tokens are just a few of the many features which enable this experience. 
+
+    Foundry Virtual Tabletop goes well beyond the basic feature set, however, with rich dynamic lighting, fog of war, audio playlists, video chat using webcams, and way more. Foundry Virtual Tabletop gives you everything you need (and then some) to forge thrilling and memorable moments with your gaming group!
+
+  logo_url: "https://foundryvtt.com/static/assets/icons/fvtt.png"
+  ext_url: "https://foundryvtt.com/"
+  config:
+    FOUNDRY_USERNAME:
+      kind: "environment"
+      label: foundryvtt.com username
+      description: "Your foundryvtt.com credentials are required to automatically download the the game license"
+      required: true
+    FOUNDRY_PASSWORD:
+      kind: "environment"
+      label: foundryvtt.com password
+      description: "Your foundryvtt.com credentials are required to automatically download the the game license"
+      required: true
+    INGRESS:
+      kind: "ingress"
+      label: "web UI domain"
+      description: Domain where the app will be hosted.
+      protocol: "https"
+      default: "foundry.*"
+      required: true
+    DATA_SIZE:
+      label: "Storage"
+      description: "Size of the shared storage volume" 
+      kind: select
+      default: 6G
+      options:
+        - label: "6 GB"
+          value: "6G"
+          description: "5 GB of disk space"
+        - label: "10 GB"
+          value: "10G"
+          description: "10 GB of disk space"
+        - label: "20 GB"
+          value: "20G"
+          description: "20 GB of disk space"
+        - label: "50 GB"
+          value: "50G"
+          description: "40 GB of disk space"
+        - label: "100 GB"
+          value: "100G"
+          description: "100 GB of disk space"
+        - label: "200 GB"
+          value: "200G"
+          description: "200 GB of disk space"
+        - label: "500 GB"
+          value: "500G"
+          description: "400 GB of disk space"
+        - label: "1 TB"
+          value: "1T"
+          description: "1TB of disk space"
+        - label: "2 TB"
+          value: "2T"
+          description: "2TB of disk space"
+
+
+volumes:
+  data:
+    driver_opts:
+      size: ${DATA_SIZE}
+
+services:
+  foundry:
+    container_name: foundry
+    image: felddy/foundryvtt:11
+    restart: always
+    labels:
+      - kr.ingress.http.30000=${INGRESS:-https://foundry.*}
+    volumes:
+      - data:/data
+    environment:
+      - FOUNDRY_USERNAME=${FOUNDRY_USERNAME}
+      - FOUNDRY_PASSWORD=${FOUNDRY_PASSWORD}
