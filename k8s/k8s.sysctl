@@ -1,0 +1,9 @@
+net.ipv6.conf.all.forwarding = 1
+net.ipv6.conf.default.forwarding = 1
+fs.file-max = 8231680
+
+# Required by kubeadm
+net.ipv4.ip_forward = 1
+
+#Tuning
+net.netfilter.nf_conntrack_max = 1000000
