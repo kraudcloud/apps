@@ -1,8 +1,8 @@
 version: '3.9'
-name: kubernetes
+name: kubernetes-free
 
 x-kraud-ui:
-  label: "Kubernetes"
+  label: "Kubernetes Free Tier"
   description: |
     Kubernetes  also known as K8s  is an open source system for automating deployment,
     scaling  and management of containerized applications
@@ -15,11 +15,9 @@ x-kraud-ui:
 
     `kubeadm init --upload-certs --apiserver-advertise-address 192.168.1.0`
 
-    and join the other nodes.
-
-    this app uses 3 nodes and required 3 public v4 addresses which are a premium addon.
-    if you wish to try kubeernetes in the free tier, please use 
-    [the free app](https://kraudcloud.com/marketplace/?search=kubernetes)
+    this app uses 1 nodes with a public v6 address
+    if you wish to use multiple k8s nodes or v4 addresses , please see
+    [the premium app](https://kraudcloud.com/marketplace/?search=kubernetes)
 
   logo_url: "https://kubernetes.io/images/favicon.png"
   ext_url: "https://kubernetes.io"
@@ -130,40 +128,7 @@ services:
       - kr.res.mem=${MEM}
       - kr.zone=${ZONE}
       - kr.network.policy=open
-      - kr.network.public=*
     networks:
       v:
         ipv4_address: 192.168.1.0/24
-
-  k2:
-    restart: always
-    image: quay.io/kraudcloud/k8s/debian:12
-    build: .
-    hostname: k2
-    volumes:
-      - k2:/
-    labels:
-      - kr.res.mem=${MEM}
-      - kr.zone=${ZONE}
-      - kr.network.policy=open
-      - kr.network.public=*
-    networks:
-      v:
-        ipv4_address: 192.168.2.0/24
-
-  k3:
-    restart: always
-    image: quay.io/kraudcloud/k8s/debian:12
-    build: .
-    hostname: k3
-    volumes:
-      - k3:/
-    labels:
-      - kr.res.mem=${MEM}
-      - kr.zone=${ZONE}
-      - kr.network.policy=open
-      - kr.network.public=*
-    networks:
-      v:
-        ipv4_address: 192.168.3.0/24
 
