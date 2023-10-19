@@ -1,0 +1,102 @@
+version: '3.9'
+name: debian
+
+x-kraud-ui:
+  label: "Debian 12 (Bookworm)"
+  description: |
+    Debian is an operating system and a distribution of Free Software. It is maintained and updated through the work of many users who volunteer their time and effort.
+
+  logo_url: "https://www.debian.org/logos/openlogo-nd-100.png"
+  ext_url: "https://debian.org"
+
+  config:
+    MEM:
+      label: "Memory and CPU"
+      description: "How much comput power would you like?"
+      kind: select
+      default: 1G
+      options:
+        - label: "1 GB / 2 GHz"
+          value: "1G"
+          description: "1 GB memory, 1Ghz CPU"
+        - label: "2 GB / 2 GHz"
+          value: "2G"
+          description: "2 GB memory, 2Ghz CPU"
+        - label: "4 GB / 4 GHz"
+          value: "4G"
+          description: "4 GB memory, 4Ghz CPU"
+        - label: "8 GB / 8 Ghz"
+          value: "8G"
+          description: "8 GB memory, 8Ghz CPU"
+        - label: "16 GB / 16 Ghz"
+          value: "16G"
+          description: "16 GB memory, 16Ghz CPU"
+        - label: "32 GB / 32 GHz"
+          value: "32G"
+          description: "32 GB memory, 32Ghz CPU"
+        - label: "64 GB / 64 GHz"
+          value: "64G"
+          description: "64 GB memory, 64Ghz CPU"
+        - label: "128 GB / 128 GHz"
+          value: "128G"
+          description: "128 GB memory, 128Ghz CPU"
+        - label: "256 GB / 256 GHz"
+          value: "256G"
+          description: "256 GB memory, 256Ghz CPU"
+        - label: "512 GB / 512 GHz"
+          value: "512G"
+          description: "512 GB memory, 512Ghz CPU"
+        - label: "1 TB / 1 THz"
+          value: "1T"
+          description: "1 TB memory, 1Thz CPU"
+        - label: "2 TB / 2 Thz"
+          value: "2T"
+          description: "2 TB memory, 2Thz CPU"
+    BOOT_SIZE:
+      label: "Boot Disk Size"
+      description: "Size of the initial boot volume. Boot volumes are block storage and can not be shared with other pods."
+      kind: select
+      default: 20G
+      options:
+        - label: "5 GB"
+          value: "5G"
+          description: "5 GB of disk space"
+        - label: "10 GB"
+          value: "10G"
+          description: "10 GB of disk space"
+        - label: "20 GB"
+          value: "20G"
+          description: "20 GB of disk space"
+        - label: "40 GB"
+          value: "40G"
+          description: "40 GB of disk space"
+        - label: "100 GB"
+          value: "100G"
+          description: "100 GB of disk space"
+    ZONE:
+      kind: zone
+      default: uca
+      label: "Deployment zone"
+      description: "Zone where the deployment and volumes will be created"
+      required: true
+
+
+volumes:
+  root:
+    driver: rbd
+    driver_opts:
+      size: ${BOOT_SIZE}
+      zone: ${ZONE}
+
+services:
+  debian:
+    restart: always
+    image: quay.io/kraudcloud/pvm/debian:12
+    build: .
+    volumes:
+      - root:/
+    labels:
+      - kr.res.mem=${MEM}
+      - kr.zone=${ZONE}
+      - kr.network.policy=open
+
