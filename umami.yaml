@@ -40,7 +40,7 @@ services:
       DATABASE_URL: postgresql://umami:umami@db:5432/umami
       DATABASE_TYPE: postgresql
       HASH_SALT: "fb7@AS*e6xyta!#Mwv!rev*6Z#XMiLj!NKfWzjBFECh66"
-      HOSTNAME: 0.0.0.0
+      HOSTNAME: "::"
     depends_on:
       - db
 
