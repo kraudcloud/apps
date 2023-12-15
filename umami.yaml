@@ -52,7 +52,7 @@ services:
       POSTGRES_USER: umami
       POSTGRES_PASSWORD: umami
     volumes:
-      - umami-db-data:/var/lib/postgresql/data
+      - umami-db:/var/lib/postgresql/data
     command: |
       bash -c '
       if [[ ! -f /docker-entrypoint-initdb.d/schema.postgresql.sql ]]; then 
@@ -62,4 +62,5 @@ services:
       '
 
 volumes:
-  umami-db-data:
+  umami-db:
+    driver: lv2
