@@ -1,0 +1,63 @@
+version: "3.9"
+name: snipe-it
+
+x-kraud-ui:
+  label: "Snipe-It"
+  description: |
+
+  logo_url: "https://raw.githubusercontent.com/kraudcloud/apps/main/snipe-it/logo.jpg"
+  ext_url: https://snipeitapp.com/
+  config:
+    INGRESS:
+      kind: "ingress"
+      label: "web interface domain"
+      description: "domain where the website will be hosted at"
+      protocol: "https"
+      default: "snipeit.*"
+      required: true
+
+
+services:
+  mysql:
+    container_name: mysql
+    image: mariadb:10.11.6
+    tty: true
+    stdin_open: true
+    environment:
+      - MARIADB_ROOT_PASSWORD=fixmesecurerandom123
+    volumes:
+      - database:/var/lib/mysql
+
+  snipeit:
+    container_name: snipeit
+    tty: true
+    stdin_open: true
+    image: snipe/snipe-it:v6.2.1-alpine
+    labels:
+      - kr.ingress.80=${INGRESS:-https://snipeit.*}
+    environment:
+      - MYSQL_PORT_3306_TCP_ADDR=mysql
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=fixmesecurerandom123
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=${INGRESS}
+      - APP_TIMEZONE=Europe/Berlin
+      - APP_LOCALE=en
+      - PHP_UPLOAD_LIMIT=100
+      - APP_KEY=fixmesecurerandomblurp32bytelong
+      - SECURE_COOKIES=true
+      - APP_TRUSTED_PROXIES=*
+      - APP_FORCE_TLS=true
+      - APP_URL=${INGRESS}
+    volumes:
+      - snipeit:/var/www/html
+
+
+volumes:
+  database:
+    driver: "rbd"
+  snipeit:
+    driver: "rbd"
